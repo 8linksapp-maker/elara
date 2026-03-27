@@ -1,0 +1,94 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import Newsletter from '@/components/Newsletter.astro';
+---
+
+<BaseLayout title="Sobre" description="Conheça a história por trás deste blog e a pessoa que escreve aqui.">
+
+  <!-- About Hero -->
+  <div class="about-hero animate-fade-up">
+    <div class="about-image">
+      <img
+        src="https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?w=800&q=80"
+        alt="Foto da autora"
+      />
+    </div>
+
+    <div class="about-text-col">
+      <p class="about-eyebrow">Sobre mim</p>
+      <h1 class="about-title">
+        Escritora,<br />curiosa,<br /><em>aprendiz.</em>
+      </h1>
+      <p class="about-text">
+        Sou escritora e designer vivendo entre cidades. Este blog nasceu do desejo de criar um espaço onde as palavras tenham peso — onde cada texto seja escrito com cuidado, sem pressa.
+      </p>
+      <p class="about-text">
+        Aqui escrevo sobre criatividade, design, fotografia e os pequenos mistérios da vida cotidiana. Se você chegou até aqui, obrigada por sua presença.
+      </p>
+      <p class="about-text">
+        Acredito que escrever é uma forma de pensar em voz alta — e que os melhores textos são aqueles que nos fazem sentir menos sozinhos.
+      </p>
+
+      <div class="about-social">
+        <a href="#" aria-label="Instagram">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
+            <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/>
+            <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/>
+          </svg>
+        </a>
+        <a href="#" aria-label="Twitter">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+          </svg>
+        </a>
+        <a href="mailto:ola@elara.blog" aria-label="E-mail">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+            <polyline points="22,6 12,13 2,6"/>
+          </svg>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Values -->
+  <section style="max-width: var(--content-width); margin: 4rem auto 6rem; padding: 0 2rem;">
+    <div class="section-header" style="margin-bottom: 3rem;">
+      <span class="section-title">O que acredito</span>
+      <div class="section-line"></div>
+    </div>
+
+    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 2.5rem;">
+      {[
+        {
+          icon: '✦',
+          title: 'Qualidade sobre quantidade',
+          text: 'Prefiro publicar um texto por mês que valha a leitura a publicar todo dia por obrigação.'
+        },
+        {
+          icon: '◈',
+          title: 'Autenticidade acima de tudo',
+          text: 'Escrevo sobre o que genuinamente me interessa, sem tentar agradar algoritmos ou tendências.'
+        },
+        {
+          icon: '◇',
+          title: 'Lentidão intencional',
+          text: 'Num mundo de scroll infinito, escolho a profundidade. Textos que pedem tempo e atenção.'
+        },
+      ].map(item => (
+        <div style="padding: 2rem; border: 1px solid var(--border); border-radius: 3px;">
+          <div style="font-size: 1.4rem; color: var(--rose); margin-bottom: 1rem;">{item.icon}</div>
+          <h3 style="font-family: var(--font-display); font-size: 1.2rem; font-weight: 500; color: var(--ink); margin-bottom: 0.75rem;">{item.title}</h3>
+          <p style="font-size: 0.9rem; color: var(--ink-muted); line-height: 1.7;">{item.text}</p>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <Newsletter />
+</BaseLayout>
+
+<style>
+  .about-text-col { display: flex; flex-direction: column; justify-content: center; }
+</style>

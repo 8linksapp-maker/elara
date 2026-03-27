@@ -1,0 +1,78 @@
+---
+import BaseLayout from './BaseLayout.astro';
+import Newsletter from '@/components/Newsletter.astro';
+
+interface Props {
+  title: string;
+  description: string;
+  pubDate: Date;
+  updatedDate?: Date;
+  heroImage?: string;
+  category: string;
+  tags: string[];
+  readTime?: number;
+}
+
+const { title, description, pubDate, updatedDate, heroImage, category, tags, readTime } = Astro.props;
+
+const formattedDate = pubDate.toLocaleDateString('pt-BR', {
+  day: 'numeric',
+  month: 'long',
+  year: 'numeric',
+});
+---
+
+<BaseLayout title={title} description={description} image={heroImage} type="article">
+  <!-- Hero -->
+  <div class="post-hero">
+    {heroImage && <img src={heroImage} alt={title} />}
+    <div class="post-hero-overlay"></div>
+    <div style="position: absolute; inset: 0; display: flex; align-items: flex-end;">
+      <div class="post-hero-content container">
+        <div class="post-hero-category">{category}</div>
+        <h1 class="post-hero-title">{title}</h1>
+        <div class="post-hero-meta">
+          <time datetime={pubDate.toISOString()}>
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+              <line x1="16" y1="2" x2="16" y2="6"/>
+              <line x1="8" y1="2" x2="8" y2="6"/>
+              <line x1="3" y1="10" x2="21" y2="10"/>
+            </svg>
+            {formattedDate}
+          </time>
+          {readTime && (
+            <span>
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                <circle cx="12" cy="12" r="10"/>
+                <polyline points="12 6 12 12 16 14"/>
+              </svg>
+              {readTime} min de leitura
+            </span>
+          )}
+          {updatedDate && (
+            <span>Atualizado em {updatedDate.toLocaleDateString('pt-BR', { day: 'numeric', month: 'long', year: 'numeric' })}</span>
+          )}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Article content -->
+  <div class="post-content-wrap">
+    <article class="post-body">
+      <slot />
+    </article>
+
+    <!-- Tags -->
+    {tags.length > 0 && (
+      <div class="post-tags">
+        {tags.map(tag => (
+          <a href={`/blog?tag=${tag}`} class="post-tag">#{tag}</a>
+        ))}
+      </div>
+    )}
+  </div>
+
+  <Newsletter />
+</BaseLayout>

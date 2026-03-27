@@ -1,0 +1,140 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import PostCard from '@/components/PostCard.astro';
+import Newsletter from '@/components/Newsletter.astro';
+
+const allPosts = await getCollection('blog');
+const sortedPosts = allPosts.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+
+const categories = ['Todos', ...new Set(allPosts.map(p => p.data.category))];
+
+const postsByCategory = categories.slice(1).map(cat => ({
+  name: cat,
+  count: allPosts.filter(p => p.data.category === cat).length,
+}));
+---
+
+<BaseLayout title="Blog" description="Todos os artigos sobre escrita, design, fotografia e reflexões pessoais.">
+
+  <!-- Page Header -->
+  <div class="page-header animate-fade-up">
+    <p class="page-eyebrow">Todos os textos</p>
+    <h1 class="page-title">O <em>arquivo</em></h1>
+  </div>
+
+  <!-- Categories Filter -->
+  <div class="categories-filter">
+    {categories.map(cat => (
+      <button class={`filter-btn ${cat === 'Todos' ? 'active' : ''}`} data-category={cat}>
+        {cat}
+      </button>
+    ))}
+  </div>
+
+  <!-- Posts + Sidebar -->
+  <div class="blog-layout">
+    <!-- Posts -->
+    <div>
+      <div class="section-header">
+        <span class="section-title">Artigos</span>
+        <div class="section-line"></div>
+        <span class="section-count" id="post-count">{sortedPosts.length} textos</span>
+      </div>
+
+      <div class="posts-grid" id="posts-grid">
+        {sortedPosts.map((post, i) => (
+          <div
+            class={`post-item animate-fade-up delay-${Math.min(i + 1, 5)}`}
+            data-category={post.data.category}
+          >
+            <PostCard
+              title={post.data.title}
+              description={post.data.description}
+              slug={post.slug}
+              pubDate={post.data.pubDate}
+              heroImage={post.data.heroImage}
+              category={post.data.category}
+              readTime={post.data.readTime}
+            />
+          </div>
+        ))}
+      </div>
+    </div>
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <!-- About widget -->
+      <div class="sidebar-widget">
+        <div class="sidebar-widget-title">Sobre o blog</div>
+        <p style="font-size: 0.9rem; color: var(--ink-muted); line-height: 1.75; margin-bottom: 1.25rem;">
+          Um espaço para reflexões sobre criatividade, design, fotografia e vida. Publicações sem frequência definida, com cuidado em cada palavra.
+        </p>
+        <a href="/sobre" style="font-size: 0.8rem; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: var(--rose); display: flex; align-items: center; gap: 0.5rem;">
+          Saiba mais
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path d="M5 12h14M12 5l7 7-7 7"/>
+          </svg>
+        </a>
+      </div>
+
+      <!-- Categories widget -->
+      <div class="sidebar-widget">
+        <div class="sidebar-widget-title">Categorias</div>
+        <ul class="sidebar-categories">
+          {postsByCategory.map(cat => (
+            <li>
+              <a href={`?categoria=${cat.name.toLowerCase()}`}>{cat.name}</a>
+              <span>{cat.count}</span>
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      <!-- Newsletter mini -->
+      <div class="sidebar-widget" style="background: var(--ink); border-radius: 3px;">
+        <p style="font-size: 0.7rem; font-weight: 500; letter-spacing: 0.18em; text-transform: uppercase; color: var(--rose-light); margin-bottom: 0.75rem;">Newsletter</p>
+        <h3 style="font-family: var(--font-display); font-size: 1.3rem; font-weight: 300; color: var(--ivory); margin-bottom: 0.75rem; line-height: 1.3;">Receba novos textos</h3>
+        <p style="font-size: 0.85rem; color: rgba(249,245,239,0.45); margin-bottom: 1.25rem; line-height: 1.6;">Sem spam. Apenas quando há algo que vale a pena.</p>
+        <div style="display: flex; gap: 0; border: 1px solid rgba(255,255,255,0.1); border-radius: 2px; overflow: hidden;">
+          <input
+            type="email"
+            placeholder="seu@email.com"
+            style="flex: 1; padding: 0.7rem 1rem; background: rgba(255,255,255,0.05); border: none; outline: none; color: var(--ivory); font-size: 0.85rem; font-family: var(--font-body); font-weight: 300; min-width: 0;"
+          />
+          <button style="padding: 0.7rem 1rem; background: var(--rose); color: white; font-size: 0.75rem; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; white-space: nowrap; transition: background 0.2s; border: none; cursor: pointer;">
+            OK
+          </button>
+        </div>
+      </div>
+    </aside>
+  </div>
+
+  <Newsletter />
+</BaseLayout>
+
+<script>
+  const filterBtns = document.querySelectorAll<HTMLButtonElement>('.filter-btn');
+  const postItems = document.querySelectorAll<HTMLElement>('.post-item');
+  const postCount = document.getElementById('post-count');
+
+  filterBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const category = btn.dataset.category;
+
+      filterBtns.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+
+      let visible = 0;
+      postItems.forEach(item => {
+        const match = category === 'Todos' || item.dataset.category === category;
+        item.style.display = match ? '' : 'none';
+        if (match) visible++;
+      });
+
+      if (postCount) {
+        postCount.textContent = `${visible} texto${visible !== 1 ? 's' : ''}`;
+      }
+    });
+  });
+</script>

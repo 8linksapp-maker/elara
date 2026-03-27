@@ -1,0 +1,134 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import PostCard from '@/components/PostCard.astro';
+import Newsletter from '@/components/Newsletter.astro';
+
+const allPosts = await getCollection('blog');
+const sortedPosts = allPosts.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+const featuredPost = sortedPosts.find(p => p.data.featured) ?? sortedPosts[0];
+const recentPosts = sortedPosts.filter(p => p.slug !== featuredPost.slug).slice(0, 6);
+
+const formattedFeaturedDate = featuredPost.data.pubDate.toLocaleDateString('pt-BR', {
+  day: 'numeric',
+  month: 'long',
+  year: 'numeric',
+});
+
+const categories = [...new Set(allPosts.map(p => p.data.category))];
+const postsByCategory = categories.map(cat => ({
+  name: cat,
+  count: allPosts.filter(p => p.data.category === cat).length,
+}));
+---
+
+<BaseLayout title="Início" description="Um espaço para reflexões sobre escrita, design, fotografia e a vida como ela é.">
+
+  <!-- Hero -->
+  <section class="hero animate-fade-up">
+    <p class="hero-eyebrow">Blog pessoal</p>
+    <h1 class="hero-title">
+      Pensamentos<br />que <em>valem</em><br />o silêncio
+    </h1>
+    <p class="hero-description">
+      Reflexões sobre escrita, design, fotografia e a arte de viver com mais atenção.
+    </p>
+    <a href="/blog" class="hero-cta">
+      Ver todos os textos
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+        <path d="M5 12h14M12 5l7 7-7 7"/>
+      </svg>
+    </a>
+  </section>
+
+  <!-- Featured Post -->
+  <section class="featured-section animate-fade-up delay-2">
+    <a href={`/blog/${featuredPost.slug}`} class="featured-post">
+      <div class="featured-image-wrap">
+        {featuredPost.data.heroImage && (
+          <img src={featuredPost.data.heroImage} alt={featuredPost.data.title} />
+        )}
+      </div>
+      <div class="featured-content">
+        <div class="featured-badge">Destaque</div>
+        <h2 class="featured-title">{featuredPost.data.title}</h2>
+        <p class="featured-excerpt">{featuredPost.data.description}</p>
+        <div class="featured-meta">
+          <time class="featured-date" datetime={featuredPost.data.pubDate.toISOString()}>
+            {formattedFeaturedDate}
+          </time>
+          <span class="featured-read-more">
+            Ler artigo
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path d="M5 12h14M12 5l7 7-7 7"/>
+            </svg>
+          </span>
+        </div>
+      </div>
+    </a>
+  </section>
+
+  <!-- Recent Posts -->
+  <section class="posts-section">
+    <div class="section-header">
+      <span class="section-title">Textos Recentes</span>
+      <div class="section-line"></div>
+      <span class="section-count">{recentPosts.length} artigos</span>
+    </div>
+
+    <div class="posts-grid">
+      {recentPosts.map((post, i) => (
+        <div class={`animate-fade-up delay-${Math.min(i + 1, 5)}`}>
+          <PostCard
+            title={post.data.title}
+            description={post.data.description}
+            slug={post.slug}
+            pubDate={post.data.pubDate}
+            heroImage={post.data.heroImage}
+            category={post.data.category}
+            readTime={post.data.readTime}
+          />
+        </div>
+      ))}
+    </div>
+
+    <div style="text-align: center; margin-top: 3.5rem;">
+      <a href="/blog" style="display: inline-flex; align-items: center; gap: 0.75rem; font-size: 0.85rem; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink); border: 1px solid var(--border-dark); padding: 0.85rem 2rem; border-radius: 2rem; transition: all 0.25s;">
+        Ver todos os artigos
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <path d="M5 12h14M12 5l7 7-7 7"/>
+        </svg>
+      </a>
+    </div>
+  </section>
+
+  <!-- Categories Strip -->
+  <section style="background: var(--ivory-dark); padding: 4rem 2rem; margin-bottom: 0;">
+    <div class="container">
+      <div class="section-header" style="margin-bottom: 2rem;">
+        <span class="section-title">Categorias</span>
+        <div class="section-line"></div>
+      </div>
+      <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+        {postsByCategory.map(cat => (
+          <a
+            href={`/blog?categoria=${cat.name.toLowerCase()}`}
+            style="display: inline-flex; align-items: center; gap: 0.6rem; padding: 0.7rem 1.5rem; background: var(--ivory); border: 1px solid var(--border); border-radius: 2rem; font-size: 0.85rem; color: var(--ink-light); transition: all 0.2s; font-weight: 400;"
+          >
+            {cat.name}
+            <span style="font-size: 0.75rem; color: var(--rose); font-weight: 500;">{cat.count}</span>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <Newsletter />
+</BaseLayout>
+
+<style>
+  .hero-cta:hover {
+    color: var(--rose);
+    border-color: var(--rose);
+  }
+</style>

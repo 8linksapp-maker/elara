@@ -1,0 +1,74 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+---
+
+<BaseLayout title="Contato" description="Entre em contato. Sempre feliz em receber mensagens.">
+
+  <div style="max-width: var(--narrow-width); margin: 6rem auto; padding: 0 2rem;">
+    <div class="animate-fade-up">
+      <p style="font-size: 0.75rem; font-weight: 500; letter-spacing: 0.2em; text-transform: uppercase; color: var(--rose); margin-bottom: 1rem;">Contato</p>
+      <h1 style="font-family: var(--font-display); font-size: clamp(2.5rem, 5vw, 4rem); font-weight: 300; color: var(--ink); margin-bottom: 1.5rem; letter-spacing: -0.02em; line-height: 1.1;">
+        Vamos<br /><em style="font-style: italic; color: var(--rose);">conversar</em>
+      </h1>
+      <p style="color: var(--ink-muted); font-size: 1.05rem; line-height: 1.75; margin-bottom: 3rem;">
+        Tem uma pergunta, uma colaboração em mente ou simplesmente quer dizer olá? Me manda uma mensagem — respondo sempre.
+      </p>
+    </div>
+
+    <form class="animate-fade-up delay-2" style="display: flex; flex-direction: column; gap: 1.25rem;" onsubmit="return false;">
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem;">
+        <div>
+          <label style="display: block; font-size: 0.78rem; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-muted); margin-bottom: 0.5rem;">Nome</label>
+          <input
+            type="text"
+            placeholder="Seu nome"
+            style="width: 100%; padding: 0.85rem 1rem; border: 1px solid var(--border); border-radius: 2px; background: transparent; font-family: var(--font-body); font-size: 0.95rem; color: var(--ink); outline: none; transition: border-color 0.2s;"
+            onfocus="this.style.borderColor='var(--rose)'"
+            onblur="this.style.borderColor='var(--border)'"
+          />
+        </div>
+        <div>
+          <label style="display: block; font-size: 0.78rem; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-muted); margin-bottom: 0.5rem;">E-mail</label>
+          <input
+            type="email"
+            placeholder="seu@email.com"
+            style="width: 100%; padding: 0.85rem 1rem; border: 1px solid var(--border); border-radius: 2px; background: transparent; font-family: var(--font-body); font-size: 0.95rem; color: var(--ink); outline: none; transition: border-color 0.2s;"
+            onfocus="this.style.borderColor='var(--rose)'"
+            onblur="this.style.borderColor='var(--border)'"
+          />
+        </div>
+      </div>
+
+      <div>
+        <label style="display: block; font-size: 0.78rem; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-muted); margin-bottom: 0.5rem;">Assunto</label>
+        <input
+          type="text"
+          placeholder="Sobre o que é?"
+          style="width: 100%; padding: 0.85rem 1rem; border: 1px solid var(--border); border-radius: 2px; background: transparent; font-family: var(--font-body); font-size: 0.95rem; color: var(--ink); outline: none; transition: border-color 0.2s;"
+          onfocus="this.style.borderColor='var(--rose)'"
+          onblur="this.style.borderColor='var(--border)'"
+        />
+      </div>
+
+      <div>
+        <label style="display: block; font-size: 0.78rem; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-muted); margin-bottom: 0.5rem;">Mensagem</label>
+        <textarea
+          rows="6"
+          placeholder="Sua mensagem..."
+          style="width: 100%; padding: 0.85rem 1rem; border: 1px solid var(--border); border-radius: 2px; background: transparent; font-family: var(--font-body); font-size: 0.95rem; color: var(--ink); outline: none; transition: border-color 0.2s; resize: vertical;"
+          onfocus="this.style.borderColor='var(--rose)'"
+          onblur="this.style.borderColor='var(--border)'"
+        ></textarea>
+      </div>
+
+      <button
+        type="submit"
+        style="align-self: flex-start; padding: 0.9rem 2.5rem; background: var(--ink); color: var(--ivory); font-family: var(--font-body); font-size: 0.82rem; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; border-radius: 2rem; transition: background 0.2s;"
+        onmouseover="this.style.background='var(--rose)'"
+        onmouseout="this.style.background='var(--ink)'"
+      >
+        Enviar mensagem
+      </button>
+    </form>
+  </div>
+</BaseLayout>
